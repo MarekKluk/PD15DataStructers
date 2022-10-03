@@ -9,8 +9,26 @@
 
 //2: interface for drag'n'drop representation
 //Suggested data structure: tree
-//Trees are non linear, so it makes the iteration shorter
 //Highly efficient during insert and search operations
+//Trees are non linear, so it makes the iteration shorter
+
+
+//Types of Trees Data Structures
+//1. General Tree:
+// Can have n numbers of substrees
+// The Subtrees are unordered
+// 2. Binary Search Tree:
+// each node in a tree can have utmost two child nodes.
+// Every node in the left subtree must contain a value less than the value of the root node,
+// and the value of each node in the right subtree must be bigger than the value of the root node.
+// 3. AVL Tree
+// Variant of a binary tree
+// Balanced binary tree
+// Tree is said to be balanced if balance factor of each node is in between -1 to 1
+// 4.Red-Black Tree
+// Variant of a binary tree
+// Self-balancing binary tree
+// Similar to AVL tree, but maximum of 2 rotations are required to balance the tree
 
 
 class LinkedListElement {
@@ -44,6 +62,7 @@ class LinkedList {
         }
         this.#tail = newMember;
     }
+    //Complexity O(1)
 
     toArray() {
         let currentMember = this.#head
@@ -54,7 +73,7 @@ class LinkedList {
         }
         return array;
     }
-
+    //Complexity O(n)
     remove(indexNumber, list) {
         if(indexNumber >= list.length) {
             throw new Error("Nie ma takiego numeru wariacie");
@@ -168,7 +187,6 @@ class GraphNode {
     constructor(value) {
         this.value = value;
         this.id = GraphNode.uuidv4();
-        this.edges = {};
     }
     static uuidv4() {
         return ([1e7]+-1e3+-4e3+-8e3+-1e11).replace(/[018]/g, c =>
@@ -178,31 +196,41 @@ class GraphNode {
 }
 
 class Edge {
-    constructor(edgeValue) {
+    constructor(edgeValue, start, end) {
         this.edgeValue = edgeValue;
+        this.start = start;
+        this.end = end;
     }
 }
 
 class Graph {
     nodes = [];
+    edges = [];
     constructor(firstNode) {
         this.nodes.push(firstNode);
     }
 
-    add(value, neighbourA, neighbourB) {
-        if(this.nodes.find(node => node === neighbourA) || this.nodes.find(node => node === neighbourB)) {
-            const newMember = new GraphNode(value, neighbourA, neighbourB);
-            this.nodes.push(newMember);
-            return newMember;
-        } else {
-            throw new Error('No such members.');
-        }
+    addNode (value) {
+        const newNode = new GraphNode(value);
+        this.nodes.push(newNode);
+        return newNode;
+    }
+
+    addEdge(edgeValue, start, end) {
+        const newEdge = new Edge(edgeValue, start, end);
+        this.edges.push(newEdge)
+        return newEdge;
     }
 }
 
 const firstNode = new GraphNode(1);
 const graph = new Graph(firstNode);
-const secondNode = graph.add(12, firstNode, null);
-const thirdNode = graph.add(31, secondNode, firstNode);
-const lastNode = graph.add(666, thirdNode, null);
+const secondNode = graph.addNode(2);
+const thirdNode = graph.addNode(3);
+graph.addEdge(1, firstNode, secondNode)
+graph.addEdge(2, secondNode, thirdNode)
+graph.addEdge(666, thirdNode, null)
 console.log(graph);
+
+
+
