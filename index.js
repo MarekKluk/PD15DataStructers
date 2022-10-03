@@ -102,6 +102,7 @@ class LinkedList {
     // Complexity: O(n)
     reverse() {
         let currentMember = this.#head;
+        this.#tail = currentMember;
         while(currentMember) {
             let currentMembersNextMember = currentMember.nextMember;
             currentMember.nextMember = currentMember.previousMember;
@@ -178,6 +179,7 @@ list.reverse();
 list.switchPositions(1,3, list.toArray());
 list.addBetween(1,2)
 console.log(list.toArray());
+
 
 
 // Finish the Graph implementation by adding Edge class
