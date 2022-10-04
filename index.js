@@ -46,7 +46,7 @@ class LinkedListElement {
 class LinkedList {
     #head = null;
     #tail = null;
-
+    nodes = [];
     addToTail(value) {
         let newMember = null;
         console.log('adding ' + value);
@@ -60,7 +60,8 @@ class LinkedList {
             newMember = new LinkedListElement(value, null, this.#tail)
             this.#tail.nextMember = newMember;
         }
-        this.#tail = newMember;
+         this.#tail = newMember;
+         this.nodes.push(newMember);
     }
     //Complexity O(1)
 
@@ -112,42 +113,67 @@ class LinkedList {
         }
     }
     //Complexity: O(n)
-    switchPositions(leftElementIndex, rightElementIndex, list) {
-        if((leftElementIndex || rightElementIndex) >= list.length) {
-            throw new Error("Nie ma takiego numeru wariacie");
-        }
-        let currentLeftMember = this.#head;
-        let currentRightMember = this.#head;
-        for(let i=0; i<leftElementIndex; i++) {
-            currentLeftMember = currentLeftMember.nextMember;
-        }
-        for(let j=0; j<rightElementIndex; j++) {
-            currentRightMember = currentRightMember.nextMember;
-        }
-        const currentLeftMemberNextMember = currentLeftMember.nextMember;
-        const currentLeftMemberPreviousMember = currentLeftMember.previousMember;
-        currentLeftMember.nextMember = currentRightMember.nextMember;
-        if(leftElementIndex === 0) {
-            currentLeftMember.previousMember = currentRightMember.previousMember;
-            currentRightMember.nextMember = currentLeftMemberNextMember;
-            this.#head = currentRightMember;
-            currentRightMember.previousMember = currentLeftMemberPreviousMember;
-            currentLeftMember.previousMember.nextMember = currentLeftMember;
+    // switchPositions(leftElementIndex, rightElementIndex, list) {
+    //     if((leftElementIndex || rightElementIndex) >= list.length) {
+    //         throw new Error("Nie ma takiego numeru wariacie");
+    //     }
+    //     let currentLeftMember = this.#head;
+    //     let currentRightMember = this.#head;
+    //     for(let i=0; i<leftElementIndex; i++) {
+    //         currentLeftMember = currentLeftMember.nextMember;
+    //     }
+    //     for(let j=0; j<rightElementIndex; j++) {
+    //         currentRightMember = currentRightMember.nextMember;
+    //     }
+    //     const currentLeftMemberNextMember = currentLeftMember.nextMember;
+    //     const currentLeftMemberPreviousMember = currentLeftMember.previousMember;
+    //     currentLeftMember.nextMember = currentRightMember.nextMember;
+    //     if(leftElementIndex === 0) {
+    //         currentLeftMember.previousMember = currentRightMember.previousMember;
+    //         currentRightMember.nextMember = currentLeftMemberNextMember;
+    //         this.#head = currentRightMember;
+    //         currentRightMember.previousMember = currentLeftMemberPreviousMember;
+    //         currentLeftMember.previousMember.nextMember = currentLeftMember;
+    //         return;
+    //     }
+    //     else if(leftElementIndex - rightElementIndex === -1) {
+    //         currentLeftMember.previousMember = currentRightMember;
+    //         currentRightMember.nextMember = currentLeftMember;
+    //     }
+    //     else {
+    //         currentLeftMember.previousMember = currentRightMember.previousMember;
+    //         currentRightMember.nextMember = currentLeftMemberNextMember;
+    //     }
+    //     currentRightMember.previousMember = currentLeftMemberPreviousMember;
+    //     currentLeftMember.previousMember.nextMember = currentLeftMember;
+    //     currentRightMember.previousMember.nextMember = currentRightMember;
+    // }
+    switchPositionsv2(leftMember, rightMember) {
+        const currentLeftMemberNextMember = leftMember.nextMember;
+        const currentLeftMemberPreviousMember = leftMember.previousMember;
+        const currentRightMember = rightMember;
+        leftMember.nextMember = rightMember.nextMember;
+        if(currentLeftMemberPreviousMember === null) {
+            leftMember.previousMember = rightMember.previousMember;
+            rightMember.nextMember = currentLeftMemberNextMember;
+            this.#head = rightMember;
+            rightMember.previousMember = currentLeftMemberPreviousMember;
+            leftMember.previousMember.nextMember = leftMember;
             return;
         }
-        else if(leftElementIndex - rightElementIndex === -1) {
-            currentLeftMember.previousMember = currentRightMember;
-            currentRightMember.nextMember = currentLeftMember;
+        else if(currentLeftMemberNextMember === currentRightMember) {
+            leftMember.previousMember = rightMember;
+            rightMember.nextMember = leftMember;
         }
         else {
-            currentLeftMember.previousMember = currentRightMember.previousMember;
-            currentRightMember.nextMember = currentLeftMemberNextMember;
+            leftMember.previousMember = rightMember.previousMember;
+            rightMember.nextMember = currentLeftMemberNextMember;
         }
-        currentRightMember.previousMember = currentLeftMemberPreviousMember;
-        currentLeftMember.previousMember.nextMember = currentLeftMember;
-        currentRightMember.previousMember.nextMember = currentRightMember;
+        rightMember.previousMember = currentLeftMemberPreviousMember;
+        leftMember.previousMember.nextMember = leftMember;
+        rightMember.previousMember.nextMember = rightMember;
     }
-    // Complexity O(2*n)
+    // Complexity O(1)
     addBetween(previousElementIndex, nextElementIndex) {
         if(previousElementIndex - nextElementIndex !== -1) {
             throw new Error("Input correct indexes");
@@ -177,6 +203,8 @@ list.addToTail(99);
 list.remove(3, list.toArray());
 list.reverse();
 list.switchPositions(1,3, list.toArray());
+const listArray = list.toArray();
+list.switchPositionsv2(listArray[1], listArray[3])
 list.addBetween(1,2)
 console.log(list.toArray());
 
